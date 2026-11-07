@@ -3,99 +3,578 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#071a2e">
-    <title>Aayan — Portfolio</title>
+    <meta name="theme-color" content="#0a1020">
+    <title>Aayan — Editor Layout</title>
     <style>
       :root {
         color-scheme: dark;
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        color: #e8f0f8;
-        background: #071a2e;
-        scroll-behavior: smooth;
+        --bg: #0a1020;
+        --bg-2: #101b2d;
+        --panel: #121f33;
+        --panel-strong: #162843;
+        --panel-soft: #0f1e33;
+        --line: #233751;
+        --line-soft: #1b2d46;
+        --text: #edf5ff;
+        --muted: #9eb4c9;
+        --accent: #6ea8ff;
+        --accent-2: #87d3ff;
+        --green: #5ad3a6;
+        --shadow: rgba(0, 0, 0, 0.28);
       }
+
       * { box-sizing: border-box; }
-      body { min-height: 100vh; margin: 0; background: #071a2e; }
+
+      html, body {
+        margin: 0;
+        height: 100%;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, "Segoe UI", sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at top, rgba(110, 168, 255, 0.12), transparent 35%),
+          var(--bg);
+      }
+
+      button, input {
+        font: inherit;
+      }
+
+      .app-shell {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+
       .topbar {
-        position: sticky; top: 0; z-index: 1;
-        display: flex; justify-content: space-between; align-items: center;
-        min-height: 64px; padding: 0 max(22px, calc((100% - 760px) / 2));
-        border-bottom: 1px solid #18334c; background: #071a2e;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        padding: 0 18px 0 20px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(10, 16, 32, 0.96);
       }
-      .brand { margin: 0; font-size: .95rem; font-weight: 700; letter-spacing: .08em; }
-      .topbar span { color: #91a8bd; font-size: .85rem; }
-      main { width: min(100% - 32px, 640px); margin: 44px auto; }
-      .scroll-frame {
-        max-height: calc(100vh - 112px); overflow-y: auto; padding: clamp(24px, 6vw, 42px);
-        border: 1px solid #18334c; border-radius: 20px; background: #0a2037;
-        scrollbar-color: #315777 #0a2037;
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        letter-spacing: .08em;
+        font-size: .78rem;
+        text-transform: uppercase;
       }
-      .hero { padding: 8px 0 30px; text-align: center; }
-      .eyebrow { color: #79b8e3; font-size: .76rem; letter-spacing: .12em; text-transform: uppercase; }
-      .hero h2 { margin: 12px 0; font-size: clamp(2.2rem, 8vw, 3.4rem); letter-spacing: -.04em; }
-      .hero p, .section p { color: #a9bdcf; line-height: 1.7; }
-      .hero p { max-width: 430px; margin: 0 auto; }
-      .menu { display: grid; gap: 10px; justify-items: center; margin: 0 0 32px; }
-      .menu a {
-        display: flex; justify-content: space-between; align-items: center;
-        width: min(100%, 360px); padding: 14px 16px;
-        border: 1px solid #23435e; border-radius: 12px; background: #0d2944;
-        color: #e8f0f8; font-weight: 600; text-decoration: none;
+
+      .brand-mark {
+        display: inline-grid;
+        place-items: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 7px;
+        background: linear-gradient(180deg, #6ea8ff, #4d77de);
+        color: #06111e;
+        font-weight: 900;
       }
-      .menu a:hover { border-color: #5794bd; background: #103250; }
-      a:focus-visible { outline: 2px solid #79b8e3; outline-offset: 3px; }
-      .arrow { color: #79b8e3; }
-      .section { scroll-margin-top: 20px; padding: 22px 0; border-top: 1px solid #18334c; }
-      .section h3 { margin: 0; font-size: 1.15rem; }
-      .section p { margin: 8px 0 0; }
-      .contact { text-align: center; }
-      .contact-link { display: inline-block; margin-top: 14px; padding: 10px 16px; border-radius: 10px; background: #16466a; color: #f3f8fc; text-decoration: none; }
-      footer { padding-top: 20px; color: #7890a6; font-size: .8rem; text-align: center; }
-      @media (max-width: 520px) {
-        .topbar { min-height: 58px; }
-        .topbar span { font-size: .75rem; }
-        main { margin: 20px auto; }
-        .scroll-frame { max-height: calc(100vh - 82px); padding: 24px 18px; }
+
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
       }
-      @media (prefers-reduced-motion: reduce) { :root { scroll-behavior: auto; } }
+
+      .pill {
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,0.02);
+        color: var(--text);
+        border-radius: 999px;
+        padding: 7px 12px;
+        font-size: .74rem;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+      }
+
+      .editor-layout {
+        display: grid;
+        grid-template-columns: 270px minmax(0, 1fr) 280px;
+        height: calc(100vh - 64px);
+      }
+
+      .panel {
+        background: rgba(13, 22, 35, 0.94);
+        border-right: 1px solid var(--line);
+      }
+
+      .panel:last-child {
+        border-right: none;
+        border-left: 1px solid var(--line);
+      }
+
+      .left-panel {
+        padding: 16px 14px 14px;
+      }
+
+      .add-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        height: 42px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: linear-gradient(180deg, #1b2d46, #14253c);
+        color: var(--text);
+        font-weight: 700;
+        cursor: pointer;
+        margin-bottom: 18px;
+      }
+
+      .add-btn:hover {
+        border-color: #4d7cc4;
+        box-shadow: inset 0 0 0 1px rgba(110, 168, 255, 0.24);
+      }
+
+      .explorer-head,
+      .properties-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+
+      .label {
+        font-size: .72rem;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .mini-btn {
+        border: 1px solid var(--line);
+        background: transparent;
+        color: var(--muted);
+        border-radius: 8px;
+        padding: 5px 8px;
+        font-size: .68rem;
+      }
+
+      .tree {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 6px;
+      }
+
+      .tree li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        height: 34px;
+        padding: 0 10px 0 8px;
+        border-radius: 10px;
+        color: var(--muted);
+      }
+
+      .tree li.active {
+        background: rgba(110, 168, 255, 0.12);
+        color: var(--text);
+        border: 1px solid rgba(110, 168, 255, 0.22);
+      }
+
+      .tree li .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 3px;
+        background: var(--accent);
+        opacity: .9;
+      }
+
+      .tree li:nth-child(2) .dot { background: var(--green); }
+      .tree li:nth-child(3) .dot { background: #d7a5ff; }
+      .tree li:nth-child(4) .dot { background: #ffb260; }
+
+      .canvas-panel {
+        display: flex;
+        flex-direction: column;
+        background: #0d1626;
+      }
+
+      .canvas-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 56px;
+        padding: 0 20px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(12, 20, 32, 0.96);
+      }
+
+      .toolbar-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .tool-btn {
+        height: 30px;
+        padding: 0 10px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        color: var(--text);
+        background: transparent;
+      }
+
+      .tool-btn.primary {
+        background: linear-gradient(180deg, #214f87, #183d6a);
+        border-color: #3d6db1;
+      }
+
+      .canvas-surface {
+        flex: 1;
+        padding: 28px;
+        overflow: auto;
+      }
+
+      .canvas-wrap {
+        width: min(100%, 780px);
+        margin: 0 auto;
+        padding: 24px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      }
+
+      .canvas-block {
+        border: 1px solid var(--line-soft);
+        border-radius: 18px;
+        background: rgba(20, 31, 46, 0.9);
+        box-shadow: 0 18px 28px var(--shadow);
+      }
+
+      .hero-card {
+        padding: 22px;
+        margin-bottom: 18px;
+      }
+
+      .hero-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+      }
+
+      .hero-label {
+        font-size: .7rem;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .small-tag {
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(110, 168, 255, 0.45);
+        background: rgba(110, 168, 255, 0.07);
+        color: var(--accent-2);
+        font-size: .68rem;
+      }
+
+      .hero-title {
+        margin: 0 0 12px;
+        font-size: clamp(2rem, 3vw, 3rem);
+        line-height: 1.1;
+        letter-spacing: -.05em;
+      }
+
+      .hero-sub {
+        margin: 0;
+        width: min(100%, 520px);
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .cta-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .btn {
+        height: 38px;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        padding: 0 14px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .btn.primary {
+        background: linear-gradient(180deg, #7bb6ff, #5f8fe8);
+        color: #081522;
+      }
+
+      .btn.secondary {
+        border-color: var(--line);
+        background: rgba(255,255,255,0.02);
+        color: var(--text);
+      }
+
+      .cards-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .mini-card {
+        padding: 18px 16px;
+      }
+
+      .mini-card h4 {
+        margin: 8px 0 7px;
+        font-size: 1rem;
+      }
+
+      .mini-card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+        font-size: .88rem;
+      }
+
+      .icon-box {
+        display: inline-grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: rgba(110, 168, 255, 0.12);
+        color: var(--accent-2);
+      }
+
+      .properties-panel {
+        padding: 16px 14px 18px;
+      }
+
+      .properties-list {
+        display: grid;
+        gap: 14px;
+      }
+
+      .property {
+        display: grid;
+        gap: 8px;
+      }
+
+      .property label {
+        color: var(--muted);
+        font-size: .74rem;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+      }
+
+      .property input,
+      .property select {
+        width: 100%;
+        height: 38px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(255,255,255,0.02);
+        color: var(--text);
+        padding: 0 12px;
+      }
+
+      .switch-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(255,255,255,0.02);
+      }
+
+      .switch {
+        position: relative;
+        width: 36px;
+        height: 20px;
+        border-radius: 999px;
+        background: #263953;
+      }
+
+      .switch::after {
+        content: "";
+        position: absolute;
+        top: 3px;
+        left: 4px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #dfeaff;
+      }
+
+      .switch.on {
+        background: #2e5b91;
+      }
+
+      .switch.on::after {
+        left: 20px;
+      }
+
+      @media (max-width: 980px) {
+        .editor-layout {
+          grid-template-columns: 220px minmax(0, 1fr) 240px;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .editor-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .panel {
+          border-right: none;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .panel:last-child {
+          border-left: none;
+          border-bottom: none;
+        }
+
+        .canvas-surface {
+          padding: 16px;
+        }
+
+        .cards-row {
+          grid-template-columns: 1fr;
+        }
+      }
     </style>
   </head>
   <body>
-    <header class="topbar">
-      <h1 class="brand">AAYAN / PORTFOLIO</h1>
-      <span>Code · Create · Play</span>
-    </header>
-    <main>
-      <div class="scroll-frame">
-        <section class="hero" id="home">
-          <div class="eyebrow">A small portfolio</div>
-          <h2>Hey, I'm Aayan.</h2>
-          <p>I enjoy coding, editing, and playing. Here's a little collection of what I'm into.</p>
-        </section>
-        <nav class="menu" aria-label="Portfolio sections">
-          <a href="#projects"><span>Coding projects</span><span class="arrow" aria-hidden="true">↘</span></a>
-          <a href="#editing"><span>Video editing</span><span class="arrow" aria-hidden="true">↘</span></a>
-          <a href="#playing"><span>Things I play</span><span class="arrow" aria-hidden="true">↘</span></a>
-          <a href="#contact"><span>Contact</span><span class="arrow" aria-hidden="true">↘</span></a>
-        </nav>
-        <section class="section" id="projects">
-          <h3>Coding projects</h3>
-          <p>My website is my first project. More experiments coming soon.</p>
-        </section>
-        <section class="section" id="editing">
-          <h3>Video editing</h3>
-          <p>A place for edits and creative experiments. I'll add my work here soon.</p>
-        </section>
-        <section class="section" id="playing">
-          <h3>Things I play</h3>
-          <p>Games and other things I enjoy playing.</p>
-        </section>
-        <section class="section contact" id="contact">
-          <h3>Say hello</h3>
-          <p>Add your preferred contact link here when you're ready.</p>
-          <a class="contact-link" href="mailto:hello@example.com">Email me</a>
-        </section>
-        <footer>Made by Aayan</footer>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark">A</span>
+          <span>Editor</span>
+        </div>
+        <div class="top-actions">
+          <button class="pill">Preview</button>
+          <button class="pill">Publish</button>
+        </div>
+      </header>
+
+      <div class="editor-layout">
+        <aside class="panel left-panel">
+          <button class="add-btn">＋ Add elements</button>
+
+          <div class="explorer-head">
+            <span class="label">Explorer</span>
+            <button class="mini-btn">View</button>
+          </div>
+
+          <ul class="tree">
+            <li class="active"><span class="dot"></span> Page 1</li>
+            <li><span class="dot"></span> Hero section</li>
+            <li><span class="dot"></span> Feature cards</li>
+            <li><span class="dot"></span> CTA block</li>
+          </ul>
+        </aside>
+
+        <main class="canvas-panel">
+          <div class="canvas-toolbar">
+            <div class="toolbar-group">
+              <button class="tool-btn">Design</button>
+              <button class="tool-btn">Layout</button>
+            </div>
+            <div class="toolbar-group">
+              <button class="tool-btn primary">Export</button>
+            </div>
+          </div>
+
+          <div class="canvas-surface">
+            <div class="canvas-wrap">
+              <section class="canvas-block hero-card">
+                <div class="hero-top">
+                  <span class="hero-label">Homepage</span>
+                  <span class="small-tag">Live</span>
+                </div>
+
+                <h1 class="hero-title">Build something you’re proud of.</h1>
+                <p class="hero-sub">Create elegant page layouts, add components, and fine-tune the final look with a clean design workflow.</p>
+
+                <div class="cta-row">
+                  <button class="btn primary">Launch</button>
+                  <button class="btn secondary">Edit</button>
+                </div>
+              </section>
+
+              <div class="cards-row">
+                <article class="canvas-block mini-card">
+                  <div class="icon-box">✦</div>
+                  <h4>Hero</h4>
+                  <p>Strong headline and clear call-to-action with minimal styling.</p>
+                </article>
+
+                <article class="canvas-block mini-card">
+                  <div class="icon-box">▣</div>
+                  <h4>Cards</h4>
+                  <p>Simple content blocks for features, projects, or highlights.</p>
+                </article>
+
+                <article class="canvas-block mini-card">
+                  <div class="icon-box">◉</div>
+                  <h4>CTA</h4>
+                  <p>Convert visitors with a polished action section and strong contrast.</p>
+                </article>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <aside class="panel properties-panel">
+          <div class="properties-head">
+            <span class="label">Properties</span>
+            <button class="mini-btn">Reset</button>
+          </div>
+
+          <div class="properties-list">
+            <div class="property">
+              <label>Layout</label>
+              <select>
+                <option>Centered</option>
+                <option>Full width</option>
+                <option>Split</option>
+              </select>
+            </div>
+
+            <div class="property">
+              <label>Background</label>
+              <input value="#101b2d" />
+            </div>
+
+            <div class="property">
+              <label>Spacing</label>
+              <input value="24px" />
+            </div>
+
+            <div class="property">
+              <label>State</label>
+              <div class="switch-row">
+                <span>Visible</span>
+                <span class="switch on" aria-label="Visible toggle"></span>
+              </div>
+            </div>
+          </div>
+        </aside>
       </div>
-    </main>
+    </div>
   </body>
 </html>
