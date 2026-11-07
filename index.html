@@ -1,580 +1,355 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#0a1020">
-    <title>Aayan — Editor Layout</title>
-    <style>
-      :root {
-        color-scheme: dark;
-        --bg: #0a1020;
-        --bg-2: #101b2d;
-        --panel: #121f33;
-        --panel-strong: #162843;
-        --panel-soft: #0f1e33;
-        --line: #233751;
-        --line-soft: #1b2d46;
-        --text: #edf5ff;
-        --muted: #9eb4c9;
-        --accent: #6ea8ff;
-        --accent-2: #87d3ff;
-        --green: #5ad3a6;
-        --shadow: rgba(0, 0, 0, 0.28);
-      }
-
-      * { box-sizing: border-box; }
-
-      html, body {
-        margin: 0;
-        height: 100%;
-        background: var(--bg);
-        color: var(--text);
-        font-family: Inter, "Segoe UI", sans-serif;
-      }
-
-      body {
-        min-height: 100vh;
-        background:
-          radial-gradient(circle at top, rgba(110, 168, 255, 0.12), transparent 35%),
-          var(--bg);
-      }
-
-      button, input {
-        font: inherit;
-      }
-
-      .app-shell {
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-      }
-
-      .topbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 64px;
-        padding: 0 18px 0 20px;
-        border-bottom: 1px solid var(--line);
-        background: rgba(10, 16, 32, 0.96);
-      }
-
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-weight: 700;
-        letter-spacing: .08em;
-        font-size: .78rem;
-        text-transform: uppercase;
-      }
-
-      .brand-mark {
-        display: inline-grid;
-        place-items: center;
-        width: 24px;
-        height: 24px;
-        border-radius: 7px;
-        background: linear-gradient(180deg, #6ea8ff, #4d77de);
-        color: #06111e;
-        font-weight: 900;
-      }
-
-      .top-actions {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .pill {
-        border: 1px solid var(--line);
-        background: rgba(255,255,255,0.02);
-        color: var(--text);
-        border-radius: 999px;
-        padding: 7px 12px;
-        font-size: .74rem;
-        letter-spacing: .04em;
-        text-transform: uppercase;
-      }
-
-      .editor-layout {
-        display: grid;
-        grid-template-columns: 270px minmax(0, 1fr) 280px;
-        height: calc(100vh - 64px);
-      }
-
-      .panel {
-        background: rgba(13, 22, 35, 0.94);
-        border-right: 1px solid var(--line);
-      }
-
-      .panel:last-child {
-        border-right: none;
-        border-left: 1px solid var(--line);
-      }
-
-      .left-panel {
-        padding: 16px 14px 14px;
-      }
-
-      .add-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        width: 100%;
-        height: 42px;
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        background: linear-gradient(180deg, #1b2d46, #14253c);
-        color: var(--text);
-        font-weight: 700;
-        cursor: pointer;
-        margin-bottom: 18px;
-      }
-
-      .add-btn:hover {
-        border-color: #4d7cc4;
-        box-shadow: inset 0 0 0 1px rgba(110, 168, 255, 0.24);
-      }
-
-      .explorer-head,
-      .properties-head {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 12px;
-      }
-
-      .label {
-        font-size: .72rem;
-        letter-spacing: .12em;
-        text-transform: uppercase;
-        color: var(--muted);
-      }
-
-      .mini-btn {
-        border: 1px solid var(--line);
-        background: transparent;
-        color: var(--muted);
-        border-radius: 8px;
-        padding: 5px 8px;
-        font-size: .68rem;
-      }
-
-      .tree {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: grid;
-        gap: 6px;
-      }
-
-      .tree li {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        height: 34px;
-        padding: 0 10px 0 8px;
-        border-radius: 10px;
-        color: var(--muted);
-      }
-
-      .tree li.active {
-        background: rgba(110, 168, 255, 0.12);
-        color: var(--text);
-        border: 1px solid rgba(110, 168, 255, 0.22);
-      }
-
-      .tree li .dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 3px;
-        background: var(--accent);
-        opacity: .9;
-      }
-
-      .tree li:nth-child(2) .dot { background: var(--green); }
-      .tree li:nth-child(3) .dot { background: #d7a5ff; }
-      .tree li:nth-child(4) .dot { background: #ffb260; }
-
-      .canvas-panel {
-        display: flex;
-        flex-direction: column;
-        background: #0d1626;
-      }
-
-      .canvas-toolbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 56px;
-        padding: 0 20px;
-        border-bottom: 1px solid var(--line);
-        background: rgba(12, 20, 32, 0.96);
-      }
-
-      .toolbar-group {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .tool-btn {
-        height: 30px;
-        padding: 0 10px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        color: var(--text);
-        background: transparent;
-      }
-
-      .tool-btn.primary {
-        background: linear-gradient(180deg, #214f87, #183d6a);
-        border-color: #3d6db1;
-      }
-
-      .canvas-surface {
-        flex: 1;
-        padding: 28px;
-        overflow: auto;
-      }
-
-      .canvas-wrap {
-        width: min(100%, 780px);
-        margin: 0 auto;
-        padding: 24px;
-        border: 1px solid var(--line);
-        border-radius: 24px;
-        background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      }
-
-      .canvas-block {
-        border: 1px solid var(--line-soft);
-        border-radius: 18px;
-        background: rgba(20, 31, 46, 0.9);
-        box-shadow: 0 18px 28px var(--shadow);
-      }
-
-      .hero-card {
-        padding: 22px;
-        margin-bottom: 18px;
-      }
-
-      .hero-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 18px;
-      }
-
-      .hero-label {
-        font-size: .7rem;
-        letter-spacing: .12em;
-        text-transform: uppercase;
-        color: var(--muted);
-      }
-
-      .small-tag {
-        padding: 6px 10px;
-        border-radius: 999px;
-        border: 1px solid rgba(110, 168, 255, 0.45);
-        background: rgba(110, 168, 255, 0.07);
-        color: var(--accent-2);
-        font-size: .68rem;
-      }
-
-      .hero-title {
-        margin: 0 0 12px;
-        font-size: clamp(2rem, 3vw, 3rem);
-        line-height: 1.1;
-        letter-spacing: -.05em;
-      }
-
-      .hero-sub {
-        margin: 0;
-        width: min(100%, 520px);
-        color: var(--muted);
-        line-height: 1.7;
-      }
-
-      .cta-row {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-top: 20px;
-      }
-
-      .btn {
-        height: 38px;
-        border: 1px solid transparent;
-        border-radius: 10px;
-        padding: 0 14px;
-        font-weight: 700;
-        cursor: pointer;
-      }
-
-      .btn.primary {
-        background: linear-gradient(180deg, #7bb6ff, #5f8fe8);
-        color: #081522;
-      }
-
-      .btn.secondary {
-        border-color: var(--line);
-        background: rgba(255,255,255,0.02);
-        color: var(--text);
-      }
-
-      .cards-row {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 16px;
-      }
-
-      .mini-card {
-        padding: 18px 16px;
-      }
-
-      .mini-card h4 {
-        margin: 8px 0 7px;
-        font-size: 1rem;
-      }
-
-      .mini-card p {
-        margin: 0;
-        color: var(--muted);
-        line-height: 1.6;
-        font-size: .88rem;
-      }
-
-      .icon-box {
-        display: inline-grid;
-        place-items: center;
-        width: 34px;
-        height: 34px;
-        border-radius: 10px;
-        background: rgba(110, 168, 255, 0.12);
-        color: var(--accent-2);
-      }
-
-      .properties-panel {
-        padding: 16px 14px 18px;
-      }
-
-      .properties-list {
-        display: grid;
-        gap: 14px;
-      }
-
-      .property {
-        display: grid;
-        gap: 8px;
-      }
-
-      .property label {
-        color: var(--muted);
-        font-size: .74rem;
-        letter-spacing: .05em;
-        text-transform: uppercase;
-      }
-
-      .property input,
-      .property select {
-        width: 100%;
-        height: 38px;
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        background: rgba(255,255,255,0.02);
-        color: var(--text);
-        padding: 0 12px;
-      }
-
-      .switch-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 12px;
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        background: rgba(255,255,255,0.02);
-      }
-
-      .switch {
-        position: relative;
-        width: 36px;
-        height: 20px;
-        border-radius: 999px;
-        background: #263953;
-      }
-
-      .switch::after {
-        content: "";
-        position: absolute;
-        top: 3px;
-        left: 4px;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background: #dfeaff;
-      }
-
-      .switch.on {
-        background: #2e5b91;
-      }
-
-      .switch.on::after {
-        left: 20px;
-      }
-
-      @media (max-width: 980px) {
-        .editor-layout {
-          grid-template-columns: 220px minmax(0, 1fr) 240px;
-        }
-      }
-
-      @media (max-width: 760px) {
-        .editor-layout {
-          grid-template-columns: 1fr;
-        }
-
-        .panel {
-          border-right: none;
-          border-bottom: 1px solid var(--line);
-        }
-
-        .panel:last-child {
-          border-left: none;
-          border-bottom: none;
-        }
-
-        .canvas-surface {
-          padding: 16px;
-        }
-
-        .cards-row {
-          grid-template-columns: 1fr;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="app-shell">
-      <header class="topbar">
-        <div class="brand">
-          <span class="brand-mark">A</span>
-          <span>Editor</span>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08182a">
+  <title>Aayan's Website Editor</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #081321;
+      --panel: #0c1a2b;
+      --panel-raised: #10233a;
+      --line: #1d344c;
+      --text: #e8f1fb;
+      --muted: #91a7bd;
+      --accent: #76b7f5;
+      --accent-soft: rgba(118, 183, 245, .14);
+      font: 14px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; }
+    button, input, textarea, select { font: inherit; }
+    button { color: inherit; }
+    .app { display: flex; flex-direction: column; min-height: 100vh; }
+    .topbar { height: 58px; flex: 0 0 58px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 18px; border-bottom: 1px solid var(--line); background: #091625; }
+    .brand { display: flex; align-items: center; gap: 10px; min-width: 0; font-weight: 700; letter-spacing: .02em; }
+    .brand-icon { display: grid; place-items: center; width: 27px; height: 27px; border-radius: 8px; background: #1b4970; color: #bce2ff; }
+    .brand small { display: block; color: var(--muted); font-size: 11px; font-weight: 500; letter-spacing: 0; }
+    .top-right { display: flex; align-items: center; gap: 13px; }
+    .save-state { color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .download-btn, .add-btn, .small-action, .palette-item { border: 1px solid var(--line); background: var(--panel-raised); cursor: pointer; }
+    .download-btn { padding: 8px 12px; border-radius: 9px; color: #eaf5ff; font-size: 12px; font-weight: 650; }
+    .download-btn:hover, .add-btn:hover, .small-action:hover, .palette-item:hover { border-color: #4278a4; background: #15304b; }
+    .workspace { display: grid; grid-template-columns: 248px minmax(320px, 1fr) 260px; flex: 1; min-height: 0; height: calc(100vh - 58px); }
+    .sidebar { min-width: 0; overflow: auto; background: var(--panel); }
+    .explorer { padding: 16px 12px; border-right: 1px solid var(--line); }
+    .inspector { padding: 18px 14px; border-left: 1px solid var(--line); }
+    .add-wrap { position: relative; margin-bottom: 23px; }
+    .add-btn { width: 100%; padding: 10px 12px; border-radius: 9px; text-align: left; font-weight: 650; }
+    .add-btn span { margin-right: 7px; color: var(--accent); font-size: 18px; vertical-align: -1px; }
+    .palette { display: none; position: absolute; z-index: 4; top: calc(100% + 7px); left: 0; right: 0; padding: 6px; border: 1px solid var(--line); border-radius: 11px; background: #102137; box-shadow: 0 12px 28px #0006; }
+    .palette.open { display: grid; gap: 4px; }
+    .palette-item { padding: 9px; border-radius: 7px; text-align: left; font-size: 12px; }
+    .panel-heading { display: flex; justify-content: space-between; align-items: center; margin: 0 4px 10px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+    .tree { display: grid; gap: 3px; }
+    .tree-item { display: flex; align-items: center; gap: 8px; min-width: 0; width: 100%; padding: 8px 9px; border: 1px solid transparent; border-radius: 7px; background: transparent; color: #b8c8d8; text-align: left; cursor: pointer; }
+    .tree-item:hover { background: #ffffff08; }
+    .tree-item.selected { border-color: #295079; background: var(--accent-soft); color: #eef7ff; }
+    .tree-icon { width: 17px; color: #7eafd7; text-align: center; flex: 0 0 17px; }
+    .tree-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; font-size: 12px; }
+    .empty-tree { padding: 12px 9px; color: var(--muted); font-size: 12px; }
+    .canvas { min-width: 0; display: flex; flex-direction: column; background: #0a1624; }
+    .canvas-head { height: 46px; flex: 0 0 46px; display: flex; align-items: center; gap: 10px; padding: 0 16px; border-bottom: 1px solid var(--line); }
+    .window-dots { display: flex; gap: 5px; }
+    .window-dots i { width: 7px; height: 7px; display: block; border-radius: 50%; background: #38536c; }
+    .address { min-width: 0; width: min(390px, 70%); margin: auto; padding: 5px 12px; overflow: hidden; border: 1px solid #1d3043; border-radius: 7px; background: #0b1826; color: #91a7bd; font-size: 11px; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+    .canvas-scroll { flex: 1; overflow: auto; padding: 24px; }
+    .site-preview { width: min(100%, 900px); min-height: 600px; margin: 0 auto; padding: 0 clamp(22px, 6vw, 72px) 55px; border: 1px solid #233b53; border-radius: 10px; background: #0b1c2d; box-shadow: 0 16px 44px #0004; }
+    .site-header { display: flex; justify-content: space-between; align-items: center; gap: 15px; min-height: 66px; border-bottom: 1px solid #20384f; color: #dceafa; font-size: 12px; }
+    .site-header strong { font-size: 13px; letter-spacing: .04em; }
+    .site-header span { color: #8ca5bc; }
+    .site-content { padding-top: 40px; }
+    .site-element { position: relative; margin: 0 0 14px; border: 1px solid transparent; border-radius: 8px; transition: border-color .12s, background .12s; }
+    .site-element:hover { border-color: #4778a3; }
+    .site-element.is-selected { border: 1px solid #68aef0; box-shadow: 0 0 0 2px #68aef033; }
+    .site-element.is-hidden { opacity: .43; }
+    .content-heading { margin: 0; color: #eef6ff; font-size: clamp(24px, 4vw, 42px); line-height: 1.14; letter-spacing: -.04em; }
+    .content-heading.subheading { font-size: 22px; letter-spacing: -.02em; }
+    .content-paragraph { margin: 0; max-width: 650px; color: #a9bdd0; line-height: 1.8; }
+    .content-card { padding: 18px; border: 1px solid #24415b; border-radius: 11px; background: #10253a; }
+    .content-card h3 { margin: 0 0 7px; font-size: 15px; }
+    .content-card p { margin: 0; color: #a9bdd0; line-height: 1.65; font-size: 13px; }
+    .content-link { display: inline-flex; align-items: center; padding: 9px 13px; border: 1px solid #3c78a9; border-radius: 8px; background: #17456b; color: #edf7ff; font-size: 12px; font-weight: 650; text-decoration: none; }
+    .content-divider { height: 1px; border: 0; background: #29445d; }
+    .site-content [data-align="center"] { text-align: center; }
+    .site-content [data-align="right"] { text-align: right; }
+    .site-content [data-align="center"] .content-paragraph { margin-left: auto; margin-right: auto; }
+    .site-content [data-align="right"] .content-paragraph { margin-left: auto; }
+    .inspector-title { margin: 0; color: #e6f0fa; font-size: 14px; font-weight: 650; }
+    .inspector-hint { margin: 8px 0 18px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .field { display: grid; gap: 6px; margin: 0 0 15px; }
+    .field label { color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .field input, .field textarea, .field select { width: 100%; min-height: 35px; padding: 8px 9px; border: 1px solid #263d55; border-radius: 7px; outline: 0; background: #091726; color: var(--text); font-size: 12px; }
+    .field textarea { min-height: 82px; resize: vertical; line-height: 1.5; }
+    .field input:focus, .field textarea:focus, .field select:focus { border-color: #5798ce; }
+    .color-row { display: flex; align-items: center; gap: 8px; }
+    .color-row input[type="color"] { width: 38px; min-height: 34px; padding: 3px; cursor: pointer; }
+    .color-row input[type="text"] { flex: 1; }
+    .check-row { display: flex; align-items: center; gap: 8px; color: #b8c8d8; font-size: 12px; }
+    .check-row input { accent-color: #62a8ed; }
+    .inspector-actions { display: flex; gap: 7px; margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .small-action { flex: 1; padding: 8px 5px; border-radius: 7px; color: #c9d8e6; font-size: 11px; }
+    .small-action.danger { color: #ffaaa9; }
+    .notice { position: fixed; right: 18px; bottom: 18px; max-width: calc(100vw - 36px); padding: 10px 14px; border: 1px solid #345b7a; border-radius: 9px; background: #102943; color: #eaf5ff; box-shadow: 0 8px 28px #0007; font-size: 12px; opacity: 0; transform: translateY(8px); pointer-events: none; transition: .2s ease; }
+    .notice.show { opacity: 1; transform: translateY(0); }
+    @media (max-width: 900px) { .workspace { grid-template-columns: 205px minmax(280px, 1fr); height: auto; min-height: calc(100vh - 58px); } .inspector { grid-column: 1 / -1; border-top: 1px solid var(--line); border-left: 0; } .canvas { min-height: 70vh; } }
+    @media (max-width: 620px) { .topbar { padding: 0 11px; } .brand { font-size: 12px; } .save-state { display: none; } .workspace { display: flex; flex-direction: column; } .explorer { border-right: 0; border-bottom: 1px solid var(--line); } .tree { grid-template-columns: repeat(2, minmax(0, 1fr)); } .canvas { min-height: 70vh; } .canvas-scroll { padding: 12px; } .site-preview { min-height: 500px; padding-right: 20px; padding-left: 20px; } .inspector { border-top: 1px solid var(--line); } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand"><span class="brand-icon">A</span><span>Aayan's site editor<small>Build your own page</small></span></div>
+      <div class="top-right"><span class="save-state" id="save-state" aria-live="polite">Saved in this browser</span><button class="download-btn" id="download-site" type="button">Download website</button></div>
+    </header>
+    <div class="workspace">
+      <aside class="sidebar explorer" aria-label="Website explorer">
+        <div class="add-wrap">
+          <button class="add-btn" id="add-toggle" type="button" aria-expanded="false" aria-controls="element-palette"><span>＋</span>Add elements</button>
+          <div class="palette" id="element-palette" role="menu">
+            <button class="palette-item" type="button" data-add="heading">T &nbsp; Heading</button>
+            <button class="palette-item" type="button" data-add="paragraph">¶ &nbsp; Text paragraph</button>
+            <button class="palette-item" type="button" data-add="card">▧ &nbsp; Project / interest card</button>
+            <button class="palette-item" type="button" data-add="link">↗ &nbsp; Link button</button>
+            <button class="palette-item" type="button" data-add="divider">— &nbsp; Divider</button>
+          </div>
         </div>
-        <div class="top-actions">
-          <button class="pill">Preview</button>
-          <button class="pill">Publish</button>
-        </div>
-      </header>
+        <h2 class="panel-heading">Explorer <span id="element-count"></span></h2>
+        <div class="tree" id="element-tree" role="list"></div>
+      </aside>
 
-      <div class="editor-layout">
-        <aside class="panel left-panel">
-          <button class="add-btn">＋ Add elements</button>
+      <main class="canvas" aria-label="Live website preview">
+        <div class="canvas-head"><div class="window-dots" aria-hidden="true"><i></i><i></i><i></i></div><div class="address">aayanmasud.github.io &nbsp;·&nbsp; live preview</div></div>
+        <div class="canvas-scroll"><article class="site-preview" id="site-preview">
+          <header class="site-header"><strong>AAYAN</strong><span>CODE &nbsp;·&nbsp; CREATE &nbsp;·&nbsp; PLAY</span></header>
+          <div class="site-content" id="site-content"></div>
+        </article></div>
+      </main>
 
-          <div class="explorer-head">
-            <span class="label">Explorer</span>
-            <button class="mini-btn">View</button>
-          </div>
-
-          <ul class="tree">
-            <li class="active"><span class="dot"></span> Page 1</li>
-            <li><span class="dot"></span> Hero section</li>
-            <li><span class="dot"></span> Feature cards</li>
-            <li><span class="dot"></span> CTA block</li>
-          </ul>
-        </aside>
-
-        <main class="canvas-panel">
-          <div class="canvas-toolbar">
-            <div class="toolbar-group">
-              <button class="tool-btn">Design</button>
-              <button class="tool-btn">Layout</button>
-            </div>
-            <div class="toolbar-group">
-              <button class="tool-btn primary">Export</button>
-            </div>
-          </div>
-
-          <div class="canvas-surface">
-            <div class="canvas-wrap">
-              <section class="canvas-block hero-card">
-                <div class="hero-top">
-                  <span class="hero-label">Homepage</span>
-                  <span class="small-tag">Live</span>
-                </div>
-
-                <h1 class="hero-title">Build something you’re proud of.</h1>
-                <p class="hero-sub">Create elegant page layouts, add components, and fine-tune the final look with a clean design workflow.</p>
-
-                <div class="cta-row">
-                  <button class="btn primary">Launch</button>
-                  <button class="btn secondary">Edit</button>
-                </div>
-              </section>
-
-              <div class="cards-row">
-                <article class="canvas-block mini-card">
-                  <div class="icon-box">✦</div>
-                  <h4>Hero</h4>
-                  <p>Strong headline and clear call-to-action with minimal styling.</p>
-                </article>
-
-                <article class="canvas-block mini-card">
-                  <div class="icon-box">▣</div>
-                  <h4>Cards</h4>
-                  <p>Simple content blocks for features, projects, or highlights.</p>
-                </article>
-
-                <article class="canvas-block mini-card">
-                  <div class="icon-box">◉</div>
-                  <h4>CTA</h4>
-                  <p>Convert visitors with a polished action section and strong contrast.</p>
-                </article>
-              </div>
-            </div>
-          </div>
-        </main>
-
-        <aside class="panel properties-panel">
-          <div class="properties-head">
-            <span class="label">Properties</span>
-            <button class="mini-btn">Reset</button>
-          </div>
-
-          <div class="properties-list">
-            <div class="property">
-              <label>Layout</label>
-              <select>
-                <option>Centered</option>
-                <option>Full width</option>
-                <option>Split</option>
-              </select>
-            </div>
-
-            <div class="property">
-              <label>Background</label>
-              <input value="#101b2d" />
-            </div>
-
-            <div class="property">
-              <label>Spacing</label>
-              <input value="24px" />
-            </div>
-
-            <div class="property">
-              <label>State</label>
-              <div class="switch-row">
-                <span>Visible</span>
-                <span class="switch on" aria-label="Visible toggle"></span>
-              </div>
-            </div>
-          </div>
-        </aside>
-      </div>
+      <aside class="sidebar inspector" aria-label="Selected element properties">
+        <h2 class="inspector-title">Properties</h2>
+        <p class="inspector-hint" id="inspector-hint">Select something in the explorer or click it in the page preview to edit it.</p>
+        <div id="property-fields"></div>
+      </aside>
     </div>
-  </body>
+  </div>
+  <div class="notice" id="notice" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      const STORAGE_KEY = 'aayan-site-editor-v1';
+      const starters = [
+        { id: 'welcome', type: 'heading', text: "Hi, I'm Aayan.", align: 'left', color: '#eef6ff', visible: true },
+        { id: 'intro', type: 'paragraph', text: 'I enjoy coding, editing videos, and playing games. This is my little corner of the internet where I can share what I make and love.', align: 'left', color: '#a9bdd0', visible: true },
+        { id: 'interests-title', type: 'heading', text: 'What I’m into', level: 'h2', align: 'left', color: '#eef6ff', visible: true },
+        { id: 'coding', type: 'card', title: 'Coding', text: 'I like making websites, trying new ideas, and learning how things work.', align: 'left', color: '#10253a', visible: true },
+        { id: 'editing', type: 'card', title: 'Editing', text: 'A place to share video edits and creative experiments as I make them.', align: 'left', color: '#10253a', visible: true },
+        { id: 'playing', type: 'card', title: 'Playing', text: 'Games I enjoy and the things I’m playing lately.', align: 'left', color: '#10253a', visible: true },
+        { id: 'contact', type: 'link', text: 'Get in touch', url: 'mailto:hello@example.com', align: 'left', color: '#17456b', visible: true }
+      ];
+      let items = loadItems();
+      let selectedId = items[0]?.id || null;
+      let noticeTimer;
+      const tree = document.getElementById('element-tree');
+      const content = document.getElementById('site-content');
+      const fields = document.getElementById('property-fields');
+      const palette = document.getElementById('element-palette');
+      const addToggle = document.getElementById('add-toggle');
+      const saveState = document.getElementById('save-state');
+
+      function loadItems() {
+        try {
+          const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
+          if (Array.isArray(parsed) && parsed.every(item => item && typeof item.id === 'string' && typeof item.type === 'string')) return parsed;
+        } catch (_) {}
+        return starters.map(item => ({ ...item }));
+      }
+      function save() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+          saveState.textContent = 'Saved in this browser';
+        } catch (_) {
+          saveState.textContent = 'Could not save in this browser';
+        }
+      }
+      function escapeHtml(value) {
+        return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+      }
+      function safeColor(value, fallback) {
+        return /^#[0-9a-f]{6}$/i.test(value || '') ? value : fallback;
+      }
+      function labelFor(item) {
+        if (item.type === 'heading') return item.text || 'Heading';
+        if (item.type === 'paragraph') return item.text || 'Text paragraph';
+        if (item.type === 'card') return item.title || 'Project card';
+        if (item.type === 'link') return item.text || 'Link button';
+        return 'Divider';
+      }
+      function iconFor(type) { return ({ heading: 'T', paragraph: '¶', card: '▧', link: '↗', divider: '—' })[type] || '•'; }
+      function renderTree() {
+        document.getElementById('element-count').textContent = items.length;
+        if (!items.length) {
+          tree.innerHTML = '<div class="empty-tree">Your page is empty. Use Add elements to start building.</div>';
+          return;
+        }
+        tree.innerHTML = items.map(item => `<button class="tree-item ${item.id === selectedId ? 'selected' : ''}" type="button" role="listitem" data-select="${escapeHtml(item.id)}"><span class="tree-icon">${iconFor(item.type)}</span><span class="tree-name">${escapeHtml(labelFor(item))}</span></button>`).join('');
+      }
+      function renderPreview() {
+        content.innerHTML = items.map(item => {
+          const id = escapeHtml(item.id);
+          const selected = item.id === selectedId ? ' is-selected' : '';
+          const hidden = item.visible === false ? ' is-hidden' : '';
+          const align = ['left', 'center', 'right'].includes(item.align) ? item.align : 'left';
+          const color = safeColor(item.color, item.type === 'card' ? '#10253a' : item.type === 'link' ? '#17456b' : '#eef6ff');
+          const style = item.type === 'card' ? ` style="background:${color}"` : item.type === 'link' ? ` style="background:${color};border-color:${color}"` : ` style="color:${color}"`;
+          let inner = '';
+          if (item.type === 'heading') inner = `<${item.level === 'h2' ? 'h2' : 'h1'} class="content-heading ${item.level === 'h2' ? 'subheading' : ''}"${style}>${escapeHtml(item.text)}</${item.level === 'h2' ? 'h2' : 'h1'}>`;
+          else if (item.type === 'paragraph') inner = `<p class="content-paragraph"${style}>${escapeHtml(item.text)}</p>`;
+          else if (item.type === 'card') inner = `<article class="content-card"${style}><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.text)}</p></article>`;
+          else if (item.type === 'link') inner = `<a class="content-link" href="${escapeHtml(item.url || '#')}" tabindex="-1">${escapeHtml(item.text)}</a>`;
+          else inner = '<hr class="content-divider">';
+          return `<div class="site-element${selected}${hidden}" data-preview-id="${id}" data-align="${align}" ${item.visible === false ? 'aria-label="Hidden element"' : ''}>${inner}</div>`;
+        }).join('');
+      }
+      function fieldMarkup(label, key, value, type = 'text', placeholder = '') {
+        if (type === 'textarea') return `<div class="field"><label for="prop-${key}">${label}</label><textarea id="prop-${key}" data-key="${key}" placeholder="${escapeHtml(placeholder)}">${escapeHtml(value)}</textarea></div>`;
+        if (type === 'color') return `<div class="field"><label>${label}</label><div class="color-row"><input type="color" data-key="${key}" value="${safeColor(value, '#10253a')}" aria-label="Choose ${label.toLowerCase()} color"><input type="text" data-key="${key}" value="${escapeHtml(value || '')}" aria-label="${label} hex value" placeholder="#10253a"></div></div>`;
+        return `<div class="field"><label for="prop-${key}">${label}</label><input id="prop-${key}" data-key="${key}" type="${type}" value="${escapeHtml(value)}" placeholder="${escapeHtml(placeholder)}"></div>`;
+      }
+      function renderInspector() {
+        const item = items.find(entry => entry.id === selectedId);
+        if (!item) {
+          document.getElementById('inspector-hint').textContent = 'Select something in the explorer or click it in the page preview to edit it.';
+          fields.innerHTML = '';
+          return;
+        }
+        document.getElementById('inspector-hint').textContent = `Editing ${item.type}. Changes appear in the page preview immediately.`;
+        let markup = '';
+        if (item.type === 'heading') {
+          markup += fieldMarkup('Heading text', 'text', item.text, 'textarea');
+          markup += `<div class="field"><label for="prop-level">Size</label><select id="prop-level" data-key="level"><option value="h1" ${item.level !== 'h2' ? 'selected' : ''}>Large title</option><option value="h2" ${item.level === 'h2' ? 'selected' : ''}>Section title</option></select></div>`;
+          markup += fieldMarkup('Text color', 'color', item.color || '#eef6ff', 'color');
+        } else if (item.type === 'paragraph') {
+          markup += fieldMarkup('Paragraph text', 'text', item.text, 'textarea');
+          markup += fieldMarkup('Text color', 'color', item.color || '#a9bdd0', 'color');
+        } else if (item.type === 'card') {
+          markup += fieldMarkup('Card title', 'title', item.title, 'text', 'Project or interest');
+          markup += fieldMarkup('Description', 'text', item.text, 'textarea');
+          markup += fieldMarkup('Card color', 'color', item.color || '#10253a', 'color');
+        } else if (item.type === 'link') {
+          markup += fieldMarkup('Button label', 'text', item.text, 'text', 'Link text');
+          markup += fieldMarkup('Link address', 'url', item.url, 'url', 'https://example.com');
+          markup += fieldMarkup('Button color', 'color', item.color || '#17456b', 'color');
+        } else {
+          markup += '<p class="inspector-hint">A simple line divider for separating parts of your page.</p>';
+        }
+        if (item.type !== 'divider') markup += `<div class="field"><label for="prop-align">Alignment</label><select id="prop-align" data-key="align"><option value="left" ${item.align !== 'center' && item.align !== 'right' ? 'selected' : ''}>Left</option><option value="center" ${item.align === 'center' ? 'selected' : ''}>Center</option><option value="right" ${item.align === 'right' ? 'selected' : ''}>Right</option></select></div>`;
+        markup += `<label class="check-row"><input type="checkbox" data-key="visible" ${item.visible !== false ? 'checked' : ''}> Show this element</label>`;
+        markup += '<div class="inspector-actions"><button class="small-action" type="button" data-move="-1">Move up</button><button class="small-action" type="button" data-move="1">Move down</button></div>';
+        markup += '<div class="inspector-actions"><button class="small-action danger" type="button" data-delete>Delete element</button></div>';
+        fields.innerHTML = markup;
+      }
+      function refresh() { renderTree(); renderPreview(); renderInspector(); save(); }
+      function notify(message) {
+        const node = document.getElementById('notice');
+        node.textContent = message;
+        node.classList.add('show');
+        clearTimeout(noticeTimer);
+        noticeTimer = setTimeout(() => node.classList.remove('show'), 2600);
+      }
+      function addItem(type) {
+        const defaults = {
+          heading: { type, text: 'A new heading', level: 'h2', color: '#eef6ff', align: 'left', visible: true },
+          paragraph: { type, text: 'Write something about yourself here.', color: '#a9bdd0', align: 'left', visible: true },
+          card: { type, title: 'New project', text: 'Describe a project or something you enjoy.', color: '#10253a', align: 'left', visible: true },
+          link: { type, text: 'Visit my project', url: 'https://example.com', color: '#17456b', align: 'left', visible: true },
+          divider: { type, visible: true }
+        };
+        const item = { id: `item-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, ...defaults[type] };
+        items.push(item);
+        selectedId = item.id;
+        palette.classList.remove('open');
+        addToggle.setAttribute('aria-expanded', 'false');
+        refresh();
+        notify(`${type === 'card' ? 'Card' : type[0].toUpperCase() + type.slice(1)} added to your page`);
+      }
+      addToggle.addEventListener('click', () => {
+        const open = palette.classList.toggle('open');
+        addToggle.setAttribute('aria-expanded', String(open));
+      });
+      palette.addEventListener('click', event => {
+        const button = event.target.closest('[data-add]');
+        if (button) addItem(button.dataset.add);
+      });
+      tree.addEventListener('click', event => {
+        const button = event.target.closest('[data-select]');
+        if (!button) return;
+        selectedId = button.dataset.select;
+        renderTree(); renderPreview(); renderInspector();
+      });
+      content.addEventListener('click', event => {
+        const block = event.target.closest('[data-preview-id]');
+        if (!block) return;
+        if (event.target.closest('a')) event.preventDefault();
+        selectedId = block.dataset.previewId;
+        renderTree(); renderPreview(); renderInspector();
+      });
+      fields.addEventListener('input', event => updateField(event));
+      fields.addEventListener('change', event => updateField(event));
+      function updateField(event) {
+        const input = event.target.closest('[data-key]');
+        if (!input) return;
+        const item = items.find(entry => entry.id === selectedId);
+        if (!item) return;
+        const key = input.dataset.key;
+        item[key] = input.type === 'checkbox' ? input.checked : input.value;
+        renderTree(); renderPreview(); save();
+      }
+      fields.addEventListener('click', event => {
+        if (event.target.closest('[data-delete]')) {
+          items = items.filter(item => item.id !== selectedId);
+          selectedId = items[0]?.id || null;
+          refresh();
+          notify('Element deleted');
+          return;
+        }
+        const moveButton = event.target.closest('[data-move]');
+        if (moveButton) {
+          const index = items.findIndex(item => item.id === selectedId);
+          const destination = index + Number(moveButton.dataset.move);
+          if (index < 0 || destination < 0 || destination >= items.length) return;
+          [items[index], items[destination]] = [items[destination], items[index]];
+          refresh();
+        }
+      });
+      document.getElementById('download-site').addEventListener('click', () => {
+        const blocks = items.filter(item => item.visible !== false).map(item => {
+          const align = ['left', 'center', 'right'].includes(item.align) ? item.align : 'left';
+          const color = safeColor(item.color, item.type === 'card' ? '#10253a' : item.type === 'link' ? '#17456b' : '#eef6ff');
+          const style = ` style="text-align:${align};${item.type === 'card' ? `background:${color}` : item.type === 'link' ? `background:${color};border-color:${color}` : `color:${color}`}"`;
+          if (item.type === 'heading') return `<section${style}><${item.level === 'h2' ? 'h2' : 'h1'}>${escapeHtml(item.text)}</${item.level === 'h2' ? 'h2' : 'h1'}></section>`;
+          if (item.type === 'paragraph') return `<section${style}><p>${escapeHtml(item.text)}</p></section>`;
+          if (item.type === 'card') return `<article class="card"${style}><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.text)}</p></article>`;
+          if (item.type === 'link') return `<section${style}><a class="link" href="${escapeHtml(item.url || '#')}">${escapeHtml(item.text)}</a></section>`;
+          return '<hr>';
+        }).join('\n');
+        const exported = `<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b1c2d"><title>Aayan — My Website</title><style>*{box-sizing:border-box}body{margin:0;background:#0b1c2d;color:#eef6ff;font:16px/1.6 system-ui,sans-serif}.site{width:min(900px,100% - 32px);margin:auto}.bar{padding:20px 0;border-bottom:1px solid #20384f;color:#9bb2c8;font-size:13px}.bar strong{color:#eef6ff}main{padding:48px 0}section{margin:0 0 22px}h1{font-size:clamp(34px,7vw,56px);line-height:1.1;letter-spacing:-.04em;margin:0}h2{font-size:28px;margin:0}p{color:#a9bdd0;margin:0;white-space:pre-wrap}.card{padding:20px;border:1px solid #24415b;border-radius:12px;margin:14px 0}.card h3{margin:0 0 8px}.link{display:inline-block;padding:10px 15px;color:#fff;text-decoration:none;border:1px solid #3c78a9;border-radius:8px}hr{border:0;border-top:1px solid #29445d;margin:26px 0}footer{padding:24px 0;color:#7890a6;font-size:13px}</style></head><body><div class="site"><header class="bar"><strong>AAYAN</strong> &nbsp;·&nbsp; CODE · CREATE · PLAY</header><main>${blocks}</main><footer>Made by Aayan</footer></div></body></html>`;
+        const blob = new Blob([exported], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = 'index.html';
+        document.body.appendChild(anchor); anchor.click(); anchor.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        notify('Website downloaded as index.html');
+      });
+      refresh();
+    })();
+  </script>
+</body>
 </html>
