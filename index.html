@@ -3,138 +3,98 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#10131c">
-    <title>Aayan | Mini Portfolio</title>
+    <meta name="theme-color" content="#071a2e">
+    <title>Aayan — Portfolio</title>
     <style>
       :root {
         color-scheme: dark;
         font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        color: #f5f6fb;
-        background: #10131c;
+        color: #e8f0f8;
+        background: #071a2e;
         scroll-behavior: smooth;
       }
       * { box-sizing: border-box; }
-      body {
-        min-height: 100vh;
-        margin: 0;
-        background: radial-gradient(ellipse at 50% 0%, #2b2850 0, #10131c 58%);
-      }
+      body { min-height: 100vh; margin: 0; background: #071a2e; }
       .topbar {
-        position: sticky;
-        top: 0;
-        z-index: 2;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        min-height: 72px;
-        padding: 14px max(22px, calc((100% - 980px) / 2));
-        border-bottom: 1px solid rgb(255 255 255 / 10%);
-        background: rgb(16 19 28 / 86%);
-        backdrop-filter: blur(14px);
+        position: sticky; top: 0; z-index: 1;
+        display: flex; justify-content: space-between; align-items: center;
+        min-height: 64px; padding: 0 max(22px, calc((100% - 760px) / 2));
+        border-bottom: 1px solid #18334c; background: #071a2e;
       }
-      .brand { margin: 0; font-size: 1.05rem; letter-spacing: .03em; }
-      .topbar span { color: #b6bbcd; font-size: .9rem; }
-      main { width: min(100% - 32px, 760px); margin: 42px auto 64px; }
+      .brand { margin: 0; font-size: .95rem; font-weight: 700; letter-spacing: .08em; }
+      .topbar span { color: #91a8bd; font-size: .85rem; }
+      main { width: min(100% - 32px, 640px); margin: 44px auto; }
       .scroll-frame {
-        max-height: calc(100vh - 120px);
-        overflow-y: auto;
-        overscroll-behavior: contain;
-        padding: clamp(24px, 6vw, 48px);
-        border: 1px solid rgb(255 255 255 / 12%);
-        border-radius: 30px;
-        background: rgb(18 21 33 / 88%);
-        box-shadow: 0 24px 80px rgb(0 0 0 / 30%);
-        scrollbar-color: #67618c transparent;
+        max-height: calc(100vh - 112px); overflow-y: auto; padding: clamp(24px, 6vw, 42px);
+        border: 1px solid #18334c; border-radius: 20px; background: #0a2037;
+        scrollbar-color: #315777 #0a2037;
       }
-      .hero { text-align: center; padding: 8px 0 28px; }
-      .eyebrow { color: #b6a9ff; font-size: .78rem; font-weight: 750; letter-spacing: .16em; text-transform: uppercase; }
-      .hero h2 { margin: 12px 0; font-size: clamp(2.2rem, 8vw, 4rem); line-height: 1.05; letter-spacing: -.05em; }
-      .hero p { max-width: 480px; margin: 0 auto; color: #c1c5d5; line-height: 1.7; }
-      .menu { display: flex; flex-direction: column; align-items: center; gap: 12px; margin: 10px 0 38px; }
+      .hero { padding: 8px 0 30px; text-align: center; }
+      .eyebrow { color: #79b8e3; font-size: .76rem; letter-spacing: .12em; text-transform: uppercase; }
+      .hero h2 { margin: 12px 0; font-size: clamp(2.2rem, 8vw, 3.4rem); letter-spacing: -.04em; }
+      .hero p, .section p { color: #a9bdcf; line-height: 1.7; }
+      .hero p { max-width: 430px; margin: 0 auto; }
+      .menu { display: grid; gap: 10px; justify-items: center; margin: 0 0 32px; }
       .menu a {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: min(100%, 390px);
-        min-height: 58px;
-        padding: 14px 18px;
-        border: 1px solid rgb(255 255 255 / 12%);
-        border-radius: 17px;
-        background: #202438;
-        color: inherit;
-        font-weight: 650;
-        text-decoration: none;
-        transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+        display: flex; justify-content: space-between; align-items: center;
+        width: min(100%, 360px); padding: 14px 16px;
+        border: 1px solid #23435e; border-radius: 12px; background: #0d2944;
+        color: #e8f0f8; font-weight: 600; text-decoration: none;
       }
-      .menu a:hover { transform: translateY(-2px); border-color: #9c8cff; background: #2b2d49; }
-      .menu a:focus-visible, .contact-link:focus-visible { outline: 3px solid #b2a7ff; outline-offset: 3px; }
-      .arrow { color: #b6a9ff; font-size: 1.2rem; }
-      .section { scroll-margin-top: 20px; padding: 26px 0; border-top: 1px solid rgb(255 255 255 / 10%); }
-      .section h3 { margin: 0 0 16px; font-size: 1.35rem; }
-      .section-intro { margin: -7px 0 18px; color: #b6bbcd; line-height: 1.6; }
-      .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: 12px; }
-      .card { padding: 18px; border: 1px solid rgb(255 255 255 / 10%); border-radius: 18px; background: rgb(255 255 255 / 4%); }
-      .card .icon { font-size: 1.4rem; }
-      .card h4 { margin: 10px 0 6px; }
-      .card p { margin: 0; color: #b6bbcd; font-size: .94rem; line-height: 1.55; }
+      .menu a:hover { border-color: #5794bd; background: #103250; }
+      a:focus-visible { outline: 2px solid #79b8e3; outline-offset: 3px; }
+      .arrow { color: #79b8e3; }
+      .section { scroll-margin-top: 20px; padding: 22px 0; border-top: 1px solid #18334c; }
+      .section h3 { margin: 0; font-size: 1.15rem; }
+      .section p { margin: 8px 0 0; }
       .contact { text-align: center; }
-      .contact-link { display: inline-block; margin-top: 4px; padding: 12px 20px; border-radius: 14px; background: #7564db; color: white; font-weight: 700; text-decoration: none; }
-      footer { padding-top: 22px; color: #858ba1; font-size: .82rem; text-align: center; }
+      .contact-link { display: inline-block; margin-top: 14px; padding: 10px 16px; border-radius: 10px; background: #16466a; color: #f3f8fc; text-decoration: none; }
+      footer { padding-top: 20px; color: #7890a6; font-size: .8rem; text-align: center; }
       @media (max-width: 520px) {
-        .topbar { min-height: 62px; }
-        .topbar span { font-size: .78rem; }
-        main { margin-top: 20px; }
-        .scroll-frame { max-height: calc(100vh - 86px); padding: 24px 18px; border-radius: 23px; }
+        .topbar { min-height: 58px; }
+        .topbar span { font-size: .75rem; }
+        main { margin: 20px auto; }
+        .scroll-frame { max-height: calc(100vh - 82px); padding: 24px 18px; }
       }
-      @media (prefers-reduced-motion: reduce) { :root { scroll-behavior: auto; } *, *::before, *::after { transition-duration: .01ms !important; } }
+      @media (prefers-reduced-motion: reduce) { :root { scroll-behavior: auto; } }
     </style>
   </head>
   <body>
     <header class="topbar">
-      <h1 class="brand">AAYAN <span style="color:#b6a9ff">/ PORTFOLIO</span></h1>
-      <span>Creative projects &amp; interests</span>
+      <h1 class="brand">AAYAN / PORTFOLIO</h1>
+      <span>Code · Create · Play</span>
     </header>
-
     <main>
       <div class="scroll-frame">
         <section class="hero" id="home">
-          <div class="eyebrow">Welcome to my corner of the internet</div>
+          <div class="eyebrow">A small portfolio</div>
           <h2>Hey, I'm Aayan.</h2>
-          <p>I like coding, editing, and playing. This is a little home for the things I make and enjoy.</p>
+          <p>I enjoy coding, editing, and playing. Here's a little collection of what I'm into.</p>
         </section>
-
         <nav class="menu" aria-label="Portfolio sections">
-          <a href="#projects"><span>💻 &nbsp; Coding projects</span><span class="arrow" aria-hidden="true">↘</span></a>
-          <a href="#editing"><span>🎬 &nbsp; Video editing</span><span class="arrow" aria-hidden="true">↘</span></a>
-          <a href="#playing"><span>🎮 &nbsp; Things I play</span><span class="arrow" aria-hidden="true">↘</span></a>
-          <a href="#contact"><span>✉️ &nbsp; Say hello</span><span class="arrow" aria-hidden="true">↘</span></a>
+          <a href="#projects"><span>Coding projects</span><span class="arrow" aria-hidden="true">↘</span></a>
+          <a href="#editing"><span>Video editing</span><span class="arrow" aria-hidden="true">↘</span></a>
+          <a href="#playing"><span>Things I play</span><span class="arrow" aria-hidden="true">↘</span></a>
+          <a href="#contact"><span>Contact</span><span class="arrow" aria-hidden="true">↘</span></a>
         </nav>
-
         <section class="section" id="projects">
           <h3>Coding projects</h3>
-          <p class="section-intro">A few things I'm building, learning, or hoping to make.</p>
-          <div class="cards">
-            <article class="card"><div class="icon" aria-hidden="true">🌐</div><h4>My website</h4><p>You're looking at it! My first little corner of the web.</p></article>
-            <article class="card"><div class="icon" aria-hidden="true">🛠️</div><h4>Next project</h4><p>A spot for my next coding experiment. More soon!</p></article>
-          </div>
+          <p>My website is my first project. More experiments coming soon.</p>
         </section>
-
         <section class="section" id="editing">
           <h3>Video editing</h3>
-          <p class="section-intro">Edits, clips, and creative experiments will go here. Add links to your videos when you're ready to share them.</p>
+          <p>A place for edits and creative experiments. I'll add my work here soon.</p>
         </section>
-
         <section class="section" id="playing">
-          <h3>What I'm playing</h3>
-          <p class="section-intro">Games and other things I enjoy playing. I can add my current favorites here.</p>
+          <h3>Things I play</h3>
+          <p>Games and other things I enjoy playing.</p>
         </section>
-
         <section class="section contact" id="contact">
           <h3>Say hello</h3>
-          <p class="section-intro">Want to get in touch? Add a contact link here when you're ready.</p>
+          <p>Add your preferred contact link here when you're ready.</p>
           <a class="contact-link" href="mailto:hello@example.com">Email me</a>
         </section>
-        <footer>Made by Aayan · Thanks for stopping by!</footer>
+        <footer>Made by Aayan</footer>
       </div>
     </main>
   </body>
