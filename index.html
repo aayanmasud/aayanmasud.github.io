@@ -201,3 +201,326 @@
             color: #0f172a;
             border-color: var(--accent);
             font-weight: 600;
+        }
+
+        /* Software Grid */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .app-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .app-card:hover {
+            transform: translateY(-3px);
+            background-color: var(--card-hover);
+            border-color: rgba(56, 189, 248, 0.35);
+        }
+
+        .app-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .app-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .icon-blue { background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; }
+        .icon-purple { background: linear-gradient(135deg, #6366f1, #a855f7); color: #fff; }
+        .icon-emerald { background: linear-gradient(135deg, #059669, #34d399); color: #fff; }
+
+        .app-title-group {
+            flex: 1;
+        }
+
+        .app-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .app-title-group h3 {
+            font-size: 1.15rem;
+            color: var(--text-primary);
+        }
+
+        .status-badge {
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.18rem 0.55rem;
+            border-radius: 6px;
+        }
+
+        .badge-stable {
+            background-color: var(--badge-stable);
+            color: var(--badge-stable-text);
+        }
+
+        .badge-beta {
+            background-color: var(--badge-beta);
+            color: var(--badge-beta-text);
+        }
+
+        .app-meta {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.15rem;
+        }
+
+        .app-desc {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .app-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .pkg-format {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            font-family: monospace;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 0.25rem 0.5rem;
+            border-radius: 5px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: #0f172a;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.12);
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1rem 2rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="#" class="store-brand">
+                <div class="brand-logo">L</div>
+                <span>Linux Software Center</span>
+            </a>
+
+            <div class="search-bar">
+                <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="searchInput" placeholder="Search applications..." onkeyup="filterApps()">
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="featured-banner">
+            <div class="featured-info">
+                <span class="featured-tag">Featured Release • v0.1.0</span>
+                <h1>LuxShot for X11</h1>
+                <p>A blazing-fast, lightweight region screenshot utility written in Rust. Built for Fluxbox and MX Linux with automatic Super+S shortcut setup and instant clipboard support.</p>
+                <div class="featured-actions">
+                    <a href="https://github.com/modenlaggard/luxshot/releases" class="btn btn-primary" target="_blank">Download .deb Package</a>
+                    <a href="https://github.com/modenlaggard/luxshot" class="btn btn-secondary" target="_blank">View Source Code</a>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-header">
+            <h2>All Applications</h2>
+            <div class="filter-pills">
+                <button class="pill active" onclick="filterCategory('all', this)">All</button>
+                <button class="pill" onclick="filterCategory('utilities', this)">Utilities</button>
+                <button class="pill" onclick="filterCategory('system', this)">System</button>
+                <button class="pill" onclick="filterCategory('productivity', this)">Productivity</button>
+            </div>
+        </div>
+
+        <section class="apps-grid" id="appsGrid">
+            
+            <article class="app-card" data-category="utilities" data-name="luxshot screenshot x11 fluxbox rust">
+                <div>
+                    <div class="app-header">
+                        <div class="app-icon icon-blue">
+                            <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                        </div>
+                        <div class="app-title-group">
+                            <div class="app-title-row">
+                                <h3>LuxShot</h3>
+                                <span class="status-badge badge-stable">v0.1.0</span>
+                            </div>
+                            <div class="app-meta">Utilities • Rust / X11</div>
+                        </div>
+                    </div>
+                    <p class="app-desc">Fast click-and-drag region screenshot utility for Fluxbox and lightweight X11 window managers with clipboard &amp; notification support.</p>
+                </div>
+
+                <div class="app-footer">
+                    <span class="pkg-format">.deb / Source</span>
+                    <div class="btn-group">
+                        <a href="https://github.com/modenlaggard/luxshot" class="btn btn-secondary" target="_blank">Source</a>
+                        <a href="https://github.com/modenlaggard/luxshot/releases" class="btn btn-primary" target="_blank">Get</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="app-card" data-category="system" data-name="linux stats monitor processes fan speed">
+                <div>
+                    <div class="app-header">
+                        <div class="app-icon icon-emerald">
+                            <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg>
+                        </div>
+                        <div class="app-title-group">
+                            <div class="app-title-row">
+                                <h3>Linux Stats</h3>
+                                <span class="status-badge badge-stable">Stable</span>
+                            </div>
+                            <div class="app-meta">System Monitor • Hardware</div>
+                        </div>
+                    </div>
+                    <p class="app-desc">Lightweight system utility used to monitor your active running processes, CPU load, and real-time cooling fan speeds.</p>
+                </div>
+
+                <div class="app-footer">
+                    <span class="pkg-format">GitHub Repo</span>
+                    <div class="btn-group">
+                        <a href="https://github.com/modenlaggard/linuxstats" class="btn btn-primary" target="_blank">Install / View</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="app-card" data-category="productivity" data-name="jotpad notepad text editor notes">
+                <div>
+                    <div class="app-header">
+                        <div class="app-icon icon-purple">
+                            <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                        </div>
+                        <div class="app-title-group">
+                            <div class="app-title-row">
+                                <h3>JotPad</h3>
+                                <span class="status-badge badge-beta">In Development</span>
+                            </div>
+                            <div class="app-meta">Productivity • Text Editor</div>
+                        </div>
+                    </div>
+                    <p class="app-desc">A clean, distraction-free notepad designed for quick notes and plain text editing. Currently under active development.</p>
+                </div>
+
+                <div class="app-footer">
+                    <span class="pkg-format">GitHub Repo</span>
+                    <div class="btn-group">
+                        <a href="https://github.com/modenlaggard/jotpad" class="btn btn-secondary" target="_blank">View Repo</a>
+                    </div>
+                </div>
+            </article>
+
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Moden Laggard • Open-Source Linux Applications</p>
+    </footer>
+
+    <script>
+        let currentCategory = 'all';
+
+        function filterCategory(category, btnElement) {
+            currentCategory = category;
+            document.querySelectorAll('.pill').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+            filterApps();
+        }
+
+        function filterApps() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.app-card');
+
+            cards.forEach(card => {
+                const category = card.getAttribute('data-category');
+                const keywords = card.getAttribute('data-name');
+                const matchesCategory = (currentCategory === 'all' || category === currentCategory);
+                const matchesSearch = keywords.includes(query);
+
+                card.style.display = (matchesCategory && matchesSearch) ? 'flex' : 'none';
+            });
+        }
+    </script>
+
+</body>
+</html>
